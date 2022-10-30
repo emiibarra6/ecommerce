@@ -24,7 +24,7 @@ const guardarProducto = async (req,res,next) => {
             errores.push( { mensaje:  'La descripción esta vacia' });
         }
     } catch(err){
-        return next(erroresConst.ValidationError)
+        return next(errores)
     }
     try{
             //generar slug

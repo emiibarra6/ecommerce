@@ -1,4 +1,4 @@
-import mongoose, { Mongoose } from "mongoose";
+import mongoose from "mongoose";
 import bcrypt from 'bcrypt';
 
 const schemaUsuario = new mongoose.Schema({
@@ -36,5 +36,5 @@ schemaUsuario.methods.comprobarContrasenia = async function(passwordForm){
     return await bcrypt.compare(passwordForm, this.password)
 }
 
-const Usuario = Mongoose.model('usuarioCollection' , schemaUsuario )
+const Usuario = mongoose.model('usuarioCollection' , schemaUsuario )
 export default Usuario;
