@@ -1,5 +1,7 @@
 import { productosdb } from '../models/productos.models.js'
-import erroresConst from '../const/errors.js'
+import erroresConst from '../const/errors.js';
+import slug from 'slug';
+import generarID from '../helpers/generarID.js'
 
 const traeTodosLosProductos = async (req,res) => {
     try {
@@ -28,9 +30,12 @@ const guardarProducto = async (req,res,next) => {
     }
     try{
             //generar slug
-            
+            const slug_producto = slug(nombre+descripcion);
+            const id = generarID();
+            console.log(id);
             //Almacenarlo en la bd
             await productosdb.create({
+                id,
                 nombre,
                 descripcion,
                 precio,
