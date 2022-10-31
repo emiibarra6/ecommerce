@@ -3,7 +3,9 @@ import slug from 'slug';
 
 const traeTodosLosProductos = async (req,res) => {
     try {
-        productosdb.findAll().then(produc => {
+        productosdb.findAll({
+            attributes: { exclude: ['id'] }
+        }).then(produc => {
             res.status(200).json(produc);
         })   
     } catch (error) {
