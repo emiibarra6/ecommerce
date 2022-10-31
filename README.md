@@ -1,4 +1,4 @@
-**¡Hola!** Una horita todas las noches estoy desarrollando ésta API.😊
+# **¡Hola!** Una horita todas las noches estoy desarrollando ésta API.😊
 
 Los usuarios ( en un principio para sesiones y hacer CRUD ) estan en **MONGO**. 
 
@@ -28,7 +28,7 @@ Para ésta ultima, podemos iniciar sesion con:
 
 Ésta API se desarrolla con middleware HELMET para aplicar seguridad.
 
-🔥 Proyecciones 
+# 🔥 Proyecciones 
 
 ✅ CORS
 ✅ CRUD DE DIFERENTES ENTIDADES QUE FALTAN.
