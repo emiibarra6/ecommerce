@@ -1,15 +1,17 @@
 import jwt from 'jsonwebtoken';
 import Usuario from '../models/usuario.model.js';
+import dotenv from 'dotenv/config';
 
 const checkAuth  = async (req,res,next) => {
     try {
-        const decoded = jwt.verify(req.headers.authorization,process.env.JWT_SECRET);
+        const token = req.headers.authorization.split(' ')[1];
+        const decoded = jwt.verify(token,process.env.JWT_SECRET);
         //Creamos la sesion:
-            req.usuario = await Usuario.findbyid(decoded.id).select('-password');
+            req.usuario = await Usuario.findById(decoded.id).select('-password');
             return next();
     } catch (error) {
         const err = new Error('Token no valido o inexistente');
-        return res.status(403).json({msg: err.message})
+        return res.status(403).json({msg: err.message + error})
     }
 }
 

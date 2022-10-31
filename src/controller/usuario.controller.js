@@ -47,8 +47,8 @@ const autenticarUsuario = async (req,res,next) => {
     }
 
     //verificamos contrasenia
-    if (await user.comprobarContraseña(password)){
-        return res.status(200).json({ token:generarJWT(user.id) });
+    if (await user.comprobarContrasenia(password)){
+        return res.status(200).json({ token:generarJWT(user._id) });
     }else{
         return res.status(400).json({msg: 'contrasenia incorrecta'});
     }
