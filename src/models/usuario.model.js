@@ -20,6 +20,7 @@ const schemaUsuario = new mongoose.Schema({
     token:{
         type:String
     },
+    
 })
 
 //antes de guardar al usuario hasheamos la pass.
