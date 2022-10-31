@@ -3,7 +3,7 @@ export const errorHandler = (err,req,res,next) => {
     res.status(codigoEstado);
     res.json({
         message: err.message,
-        stack: process.env.NODE_ENV === 'production' ? '😘' : err.stack
+        stack: process.env.NODE_ENV === 'production' ? '😘 no voy a mostrarte detalles de error por que estoy en producción' : err.stack
     });
 
 }

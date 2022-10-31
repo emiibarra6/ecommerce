@@ -1,5 +1,4 @@
 import { productosdb } from '../models/productos.models.js'
-import erroresConst from '../const/errors.js';
 import slug from 'slug';
 
 const traeTodosLosProductos = async (req,res) => {
