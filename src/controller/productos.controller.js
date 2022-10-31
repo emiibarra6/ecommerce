@@ -31,8 +31,7 @@ const guardarProducto = async (req,res,next) => {
     try{
             //generar slug
             const slug_producto = slug(nombre+descripcion);
-            const id = generarID();
-            console.log(id);
+            
             //Almacenarlo en la bd
             await productosdb.create({
                 id,
