@@ -55,9 +55,12 @@ const guardarProducto = async (req,res,next) => {
 
 const obtenerProductoPorID = async (req,res,next) => {
     try {
-        productosdb.findByPk(req.params.id).then(produc => {
-            res.status(200).json(produc);
-        })    
+        productosdb.findByPk(req.params.id)
+        .then(produc => {
+            (produc === null) ? res.status(400).json({msg: `Producto con ID ${req.params.id} no encontrado`})  : res.status(200).json(produc);
+        }).catch(err => {
+            res.status(400).json({msg: `Error: ${err} `})
+        })  
     } catch (err) {
         return next(err)
     }
@@ -66,7 +69,7 @@ const obtenerProductoPorID = async (req,res,next) => {
 
 const actualizarProducto = async (req,res,next) => {
     try {
-        productosdb.update({
+        const resultdb = await productosdb.update({
             nombre: req.body.nombre,
             descripcion:req.body.descripcion,
             precio:req.body.precio,
@@ -80,7 +83,9 @@ const actualizarProducto = async (req,res,next) => {
                 id: req.params.id
             }
         }).then(result => {
-            res.status(200).json(result);
+            res.status(200).json({msg: `Producto ${result} actualizado`});
+        }).catch(err => {
+            res.status(400).json(err);
         });   
     } catch (err) {
         return next(err)
@@ -95,8 +100,10 @@ const borrarProducto = async (req,res,next) => {
                 id: req.params.id
             }
         }).then(result => {
-            res.status(200).json({ msg: 'producto borrado exitosamente: ' , result});
-        })   
+            res.status(200).json({ msg: `producto con ID: ${result} , borrado exitosamente:`});
+        }).catch(err => {
+            res.status(400).json(err);
+        });   
     } catch (err) {
         return next(err)
     }
