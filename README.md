@@ -31,8 +31,12 @@ Para ésta ultima, podemos iniciar sesion con:
 # 🔥 Proyecciones 
 
 ✅ CORS
+
 ✅ CRUD DE DIFERENTES ENTIDADES QUE FALTAN.
+
 ✅ MERCADO PAGO
+
 ✅ DATOS EN BUFFER CACHÉ POR 1 MINUTO PARA RESPUESTAS MAS RÁPIDAS
+
 
 Base de datos SQL: https://drive.google.com/file/d/1XOU_BnCIXHaVSk_tjfF7W2sAitVR4hxK/view?usp=sharing
