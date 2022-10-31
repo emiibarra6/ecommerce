@@ -1,36 +1,51 @@
-import Sequelize from "sequelize";
+import { DataTypes } from "sequelize";
 import db from "../db.js";
 
 export const productosdb = db.define('productos', {
-    id: {
-        primaryKey:true,
-        type: Sequelize.INTEGER,
-    },
     nombre: {
-        type: Sequelize.STRING
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate:{
+            isAlpha: {
+                args:true,
+                msg: "El nombre del producto solo puede contener letras"
+            },
+            len: {
+                args: [3,50],
+                msg: "El nombre del producto tiene que ser entre 3 y 50 caracteres"
+            }
+        },
+        
     },
     descripcion: {
-        type: Sequelize.STRING
+        type: DataTypes.STRING,
+        allowNull: false,
     },
     precio: {
-        type: Sequelize.FLOAT
+        type: DataTypes.FLOAT,
+        allowNull: false,
     },
     imagen: {
-        type: Sequelize.STRING
+        type: DataTypes.STRING,
+        allowNull: true,
     },
     inventario: {
-        type: Sequelize.INTEGER
+        type: DataTypes.INTEGER,
+        allowNull: false,
     },
     id_categoria: {
-        type: Sequelize.INTEGER
+        type: DataTypes.INTEGER
     },
     talle: {
-        type: Sequelize.STRING
+        type: DataTypes.STRING,
+        allowNull: false,
     },
     color: {
-        type: Sequelize.STRING
+        type: DataTypes.STRING,
+        allowNull: false,
     },
     slug_producto: {
-        type: Sequelize.STRING
+        type: DataTypes.STRING,
+        unique:true
     },
 })

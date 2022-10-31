@@ -34,7 +34,6 @@ const guardarProducto = async (req,res,next) => {
             
             //Almacenarlo en la bd
             await productosdb.create({
-                id,
                 nombre,
                 descripcion,
                 precio,
@@ -46,8 +45,9 @@ const guardarProducto = async (req,res,next) => {
                 slug_producto
             }).then(produc => {
                     res.status(200).json({msg: 'Producto guardado correctamente ' , produc});
-                })   
-        
+            }).catch(err =>{
+                    res.status(400).json({msg: 'Error, chekea los datos: ' , err})
+            })
     } catch (err) {
         return next(err)
     }
