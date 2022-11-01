@@ -1,12 +1,32 @@
 import { productosdb } from '../models/productos.models.js'
 import slug from 'slug';
+import { createClient } from 'redis';
 
-const traeTodosLosProductos = async (req,res) => {
+
+const client = createClient();
+await client.connect();
+
+
+const traeTodosLosProductos = async (req,res,next) => {
     try {
+        //Buscamos info en redis
+        const reply = await client.get('productos');
+
+        //si existe info, terminamos response devolviendo la info
+        if(reply) return res.status(200).send(JSON.parse(reply));
+
+        //si llegamos hasta aca, no esta en redis, hacemos la consulta a la base de datos y registramos en caché.
         productosdb.findAll({
             attributes: { exclude: ['id'] }
-        }).then(produc => {
+        }).then(async produc => {
             res.status(200).json(produc);
+            await client.set(
+                'productos',
+                JSON.stringify(produc),
+                {
+                    EX: 10,
+                }
+            );
         })   
     } catch (error) {
         return next(error)
