@@ -23,13 +23,13 @@ const traeTodosLosProductos = async (req,res,next) => {
         })();
         
         //si existe info, terminamos response devolviendo la info
-        if(reply) return res.status(200).send(JSON.parse(reply));
+        if(reply) return res.status(200).json({cache:true  , json: JSON.parse(reply)});
 
         //si llegamos hasta aca, no esta en redis, hacemos la consulta a la base de datos y registramos en caché.
         productosdb.findAll({
             attributes: { exclude: ['id'] }
         }).then(async produc => {
-            res.status(200).json(produc);
+            res.status(200).json({cache:false, json: produc});
             await client.set("productos",JSON.stringify(produc), function(err) {
                 if (err) {
                    console.error("error" , err);
