@@ -3,7 +3,11 @@ import slug from 'slug';
 import { createClient } from 'redis';
 
 
-const client = createClient();
+const client = createClient({
+    socket:{
+        host:process.env.REDIS_URI
+    }
+});
 await client.connect();
 
 
