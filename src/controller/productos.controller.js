@@ -4,9 +4,7 @@ import { createClient } from 'redis';
 
 
 const client = createClient({
-    socket:{
-        host: process.env.REDIS_URI,
-    }
+    url:process.env.REDIS_URI,
 });
 
 (async () => {
