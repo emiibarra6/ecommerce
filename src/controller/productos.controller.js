@@ -13,12 +13,15 @@ let client = createClient({
     await client.connect();
 })();
 
-
 const traeTodosLosProductos = async (req,res,next) => {
     try {
-        //Buscamos info en redis
-        const reply = await client.get('productos');
-
+        let reply;
+        
+        (async () => {
+            // await client.get("productos", "world");
+            console.log(await client.get("productos")); // => world
+        })();
+        
         //si existe info, terminamos response devolviendo la info
         if(reply) return res.status(200).send(JSON.parse(reply));
 
@@ -27,17 +30,16 @@ const traeTodosLosProductos = async (req,res,next) => {
             attributes: { exclude: ['id'] }
         }).then(async produc => {
             res.status(200).json(produc);
-            await client.set(
-                'productos',
-                JSON.stringify(produc),
-                {
-                    EX: 10,
-                }
-            );
-        })   
-    } catch (error) {
-        return next(error)
-    }
+            await client.set("productos",JSON.stringify(produc), function(err) {
+                if (err) {
+                   console.error("error" , err);
+                } 
+            })   
+         })
+         
+        }catch (error) {
+            return next(error)
+        }
 }
 
 const guardarProducto = async (req,res,next) => {
