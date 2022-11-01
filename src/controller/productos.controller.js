@@ -5,10 +5,13 @@ import { createClient } from 'redis';
 
 const client = createClient({
     socket:{
-        host:process.env.REDIS_URI
+        host: process.env.REDIS_URI,
     }
 });
-await client.connect();
+
+(async () => {
+    await client.connect();
+})();
 
 
 const traeTodosLosProductos = async (req,res,next) => {
