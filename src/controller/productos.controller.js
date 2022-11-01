@@ -12,14 +12,15 @@ let client = createClient({
 (async () => {
     await client.connect();
 })();
+let reply;
 
 const traeTodosLosProductos = async (req,res,next) => {
     try {
-        let reply;
+        
         
         (async () => {
             // await client.get("productos", "world");
-            console.log(await client.get("productos")); // => world
+            reply = await client.get("productos"); // => world
         })();
         
         //si existe info, terminamos response devolviendo la info
