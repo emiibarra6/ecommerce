@@ -5,7 +5,7 @@ import { createClient } from 'redis';
 
 let client = createClient({
     socket:{
-        host: process.env.REDIS_URI,
+        host: process.env.REDIS_URI || '127.0.0.1'
     }
 });
 
