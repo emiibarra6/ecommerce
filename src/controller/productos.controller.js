@@ -3,8 +3,10 @@ import slug from 'slug';
 import { createClient } from 'redis';
 
 
-const client = createClient({
-    url:process.env.REDIS_URI,
+let client = createClient({
+    socket:{
+        host: process.env.REDIS_URI,
+    }
 });
 
 (async () => {
