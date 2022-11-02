@@ -1,39 +1,13 @@
 import { productosdb } from '../models/productos.models.js'
 import slug from 'slug';
-import { createClient } from 'redis';
-import dotenv from 'dotenv/config';
-
-let client = createClient({
-    url: process.env.REDIS_URI
-  });
-  
-client.on('connect', function() {
-    console.log('Conectado a Redis Server');
-});
-
-client.on('error', (err)=>{
-    console.error(err.message)
-});
-
-const setValue = async (key, value) => {
-    return await client.set(key, value , {
-        EX: 10*60,
-      });
-};
-  
-const getValue = async (key) => {
-    let val = await client.get(key);
-    return val;
-};
-let reply;
+import { getValue, setValue , client } from '../helpers/redis.js'
 
 const traeTodosLosProductos = async (req,res,next) => {
     try { 
         await client.connect();
-        reply = await getValue("productos"); 
-        
+        let reply = await getValue("productos"); 
         //si existe info, terminamos response devolviendo la info
-        if(reply) {
+        if(reply !== null) {
             await client.disconnect();
             return res.status(200).json({cache:true  , json: JSON.parse(reply)});
         } 
