@@ -7,6 +7,8 @@ La base de datos SQL la tengo que **PLANET SCALE**.
 - - - 
 Poder ver las siguientes rutas:
 - -https://ecommerce-2xh0.onrender.com/api/v1/productos (GET) **ENDPOINT CON REDIS 😍**
+ # ATENCIÓN, SE TRABAJA CON PLANES FREE, TENER EN CUENTA QUE REDIS TENEMOS 25 MB EN RAM SOLAMENTE.
+ ![Image text](https://github.com/emiibarra6/ecommerce/blob/main/assetsReadme/redisPlan.jpg)
 - -https://ecommerce-2xh0.onrender.com/api/v1/productos/2 (GET)
 - -https://ecommerce-2xh0.onrender.com/api/v1/productos/2 (PATCH) ruta protegida
 - -https://ecommerce-2xh0.onrender.com/api/v1/productos/2 (DELETE) ruta protegida
