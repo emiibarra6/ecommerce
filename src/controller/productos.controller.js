@@ -12,16 +12,20 @@ let client = createClient({
 (async () => {
     await client.connect();
 })();
-let reply;
 
+const setValue = async (key, value) => {
+    return await client.set(key, value);
+};
+  
+const getValue = async (key) => {
+    let val = await client.get(key);
+    return val;
+};
+let reply;
 const traeTodosLosProductos = async (req,res,next) => {
-    try {
+    try { 
         
-        
-        (async () => {
-            // await client.get("productos", "world");
-            reply = await client.get("productos"); // => world
-        })();
+        reply = await getValue("productos"); 
         
         //si existe info, terminamos response devolviendo la info
         if(reply) return res.status(200).json({cache:true  , json: JSON.parse(reply)});
@@ -31,11 +35,7 @@ const traeTodosLosProductos = async (req,res,next) => {
             attributes: { exclude: ['id'] }
         }).then(async produc => {
             res.status(200).json({cache:false, json: produc});
-            await client.set("productos",JSON.stringify(produc), function(err) {
-                if (err) {
-                   console.error("error" , err);
-                } 
-            })   
+            await setValue("productos",JSON.stringify(produc))
          })
          
         }catch (error) {
