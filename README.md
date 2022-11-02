@@ -6,7 +6,7 @@ La base de datos SQL la tengo que **PLANET SCALE**.
 
 - - - 
 Poder ver las siguientes rutas:
-- -https://ecommerce-2xh0.onrender.com/api/v1/productos (GET) **ENDPOINT EN MANTENIMIENTO POR IMPLEMENTACION DE REDIS**
+- -https://ecommerce-2xh0.onrender.com/api/v1/productos (GET) **ENDPOINT CON REDIS 😍**
 - -https://ecommerce-2xh0.onrender.com/api/v1/productos/2 (GET)
 - -https://ecommerce-2xh0.onrender.com/api/v1/productos/2 (PATCH) ruta protegida
 - -https://ecommerce-2xh0.onrender.com/api/v1/productos/2 (DELETE) ruta protegida
@@ -35,8 +35,6 @@ Para ésta ultima, podemos iniciar sesion con:
 ✅ CRUD DE DIFERENTES ENTIDADES QUE FALTAN.
 
 ✅ MERCADO PAGO
-
-✅ DATOS EN BUFFER CACHÉ POR 1 MINUTO PARA RESPUESTAS MAS RÁPIDAS
 
 
 Base de datos SQL: https://drive.google.com/file/d/1XOU_BnCIXHaVSk_tjfF7W2sAitVR4hxK/view?usp=sharing
