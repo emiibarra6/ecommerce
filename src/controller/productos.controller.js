@@ -1,7 +1,7 @@
 import { productosdb } from '../models/productos.models.js'
 import slug from 'slug';
 import { createClient } from 'redis';
-
+import dotenv from 'dotenv/config';
 
 let client = createClient({
     socket:{
