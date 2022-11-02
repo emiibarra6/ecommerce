@@ -15,12 +15,10 @@ client.on('error', (err)=>{
     console.error(err.message)
 });
 
-(async () => {
-    await client.connect();
-})();
-
 const setValue = async (key, value) => {
-    return await client.set(key, value);
+    return await client.set(key, value , {
+        EX: 10*60,
+      });
 };
   
 const getValue = async (key) => {
@@ -28,24 +26,30 @@ const getValue = async (key) => {
     return val;
 };
 let reply;
+
 const traeTodosLosProductos = async (req,res,next) => {
     try { 
-        
+        await client.connect();
         reply = await getValue("productos"); 
         
         //si existe info, terminamos response devolviendo la info
-        if(reply) return res.status(200).json({cache:true  , json: JSON.parse(reply)});
+        if(reply) {
+            await client.disconnect();
+            return res.status(200).json({cache:true  , json: JSON.parse(reply)});
+        } 
 
         //si llegamos hasta aca, no esta en redis, hacemos la consulta a la base de datos y registramos en caché.
         productosdb.findAll({
             attributes: { exclude: ['id'] }
         }).then(async produc => {
             res.status(200).json({cache:false, json: produc});
-            await setValue("productos",JSON.stringify(produc))
+            await setValue("productos",JSON.stringify(produc));
+            await client.disconnect();
          })
          
         }catch (error) {
-            return next(error)
+            await client.disconnect();
+            return next(error);  
         }
 }
 
