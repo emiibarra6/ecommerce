@@ -1,8 +1,8 @@
-import Usuario from '../models/usuario.model.js';
+import Admin from '../models/admin.model.js';
 import generarJWT from '../helpers/generarJWT.js';
 
-const crearUsuario =  async (req,res,next) => {
-    const {nombre,email,password,celular} = req.body;
+const crearAdmin =  async (req,res,next) => {
+    const {nombre,email,password} = req.body;
     
     try {
         //Validaciones
@@ -15,11 +15,11 @@ const crearUsuario =  async (req,res,next) => {
     
     //guardar en bd
     try {
-        const usuario = new Usuario(req.body);
-        const usuarioGuardado = await usuario.save();
+        const admin = new Admin(req.body);
+        const adminSave = await admin.save();
 
         //rta
-        res.status(200).json(usuarioGuardado);
+        res.status(200).json(adminSave);
     } catch (error) {
         return next(error);
     }
@@ -27,28 +27,28 @@ const crearUsuario =  async (req,res,next) => {
 }
 
 
-const obtenerTodosLosUsuarios = async (req,res,next) => {
+const obtenerTodosLosAdmin = async (req,res,next) => {
     try {
-        const todosUsuarios = await Usuario.find();
-        res.status(200).json(todosUsuarios);   
+        const todosAdmin = await Admin.find();
+        res.status(200).json(todosAdmin);   
     } catch (error) {
         return next(error)
     }
 }
 
-const autenticarUsuario = async (req,res,next) => {
+const autenticarAdmin = async (req,res,next) => {
     const { email , password } = req.body;
 
     try {
     //verificamos que exista email en bd
-    const user = await Usuario.findOne({email});
-    if(!user){
+    const admin = await Admin.findOne({email});
+    if(!admin){
         return res.status(400).json({msg: 'Error email no registrado'});
     }
 
     //verificamos contrasenia
-    if (await user.comprobarContrasenia(password)){
-        return res.status(200).json({ token:generarJWT(user._id) });
+    if (await admin.comprobarContrasenia(password)){
+        return res.status(200).json({ token:generarJWT(admin._id) });
     }else{
         return res.status(400).json({msg: 'contrasenia incorrecta'});
     }
@@ -58,7 +58,7 @@ const autenticarUsuario = async (req,res,next) => {
 }
 
 export {
-    crearUsuario,
-    obtenerTodosLosUsuarios,
-    autenticarUsuario
+    crearAdmin,
+    obtenerTodosLosAdmin,
+    autenticarAdmin
 }

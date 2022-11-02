@@ -37,5 +37,5 @@ schemaUsuario.methods.comprobarContrasenia = async function(passwordForm){
     return await bcrypt.compare(passwordForm, this.password)
 }
 
-const Usuario = mongoose.model('usuariocollections' , schemaUsuario )
-export default Usuario;
+const Admin = mongoose.model('usuariocollections' , schemaUsuario )
+export default Admin;
