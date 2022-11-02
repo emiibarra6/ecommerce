@@ -9,6 +9,14 @@ let client = createClient({
     }
 });
 
+client.on('connect', function() {
+    console.log('Conectado a Redis Server');
+});
+
+client.on('error', (err)=>{
+    console.error(err.message)
+})
+
 (async () => {
     await client.connect();
 })();
