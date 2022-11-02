@@ -4,11 +4,9 @@ import { createClient } from 'redis';
 import dotenv from 'dotenv/config';
 
 let client = createClient({
-    socket:{
-        host: process.env.REDIS_URI || '127.0.0.1'
-    }
-});
-
+    url: process.env.REDIS_URI
+  });
+  
 client.on('connect', function() {
     console.log('Conectado a Redis Server');
 });
