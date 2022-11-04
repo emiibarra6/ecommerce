@@ -1,31 +1,30 @@
-import { createClient } from 'redis';
-import dotenv from 'dotenv/config';
+import { createClient } from 'redis'
 
 let client = createClient({
-    url: process.env.REDIS_URI
-  });
+  url: process.env.REDIS_URI
+})
   
 client.on('connect', function() {
-    console.log('Conectado a Redis Server');
-});
+  console.log('Conectado a Redis Server')
+})
 
 client.on('error', (err)=>{
-    console.error(err.message)
-});
+  console.error(err.message)
+})
 
 const setValue = async (key, value) => {
-    return await client.set(key, value , {
-        EX: 10*60,
-      });
-};
+  return await client.set(key, value , {
+    EX: 10*60,
+  })
+}
   
 const getValue = async (key) => {
-    let val = await client.get(key);
-    return val;
-};
+  let val = await client.get(key)
+  return val
+}
 
 export {
-    setValue,
-    getValue,
-    client
+  setValue,
+  getValue,
+  client
 }

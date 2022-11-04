@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "nodemon index.js",
     "start": "node index.js",
-    "build": "not build"
+    "build": "not build",
+    "lint": "eslint . "
   },
   "keywords": [],
   "author": "",
@@ -28,6 +29,7 @@
     "slug": "^8.2.2"
   },
   "devDependencies": {
-    "nodemon": "^2.0.20"
+    "eslint": "8.26.0",
+    "nodemon": "2.0.20"
   }
 }
