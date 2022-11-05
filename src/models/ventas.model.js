@@ -19,4 +19,5 @@ export const ventasdb = db.define('ventas', {
     type: DataTypes.DATE,
     allowNull: false,
   },
+
 })
