@@ -1,11 +1,14 @@
 import Sequelize from 'sequelize'
+// eslint-disable-next-line no-unused-vars
+import dotenv from 'dotenv'
 
-const db = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS, {
-  host: process.env.DB_HOST,
+dotenv.config()
+const db = await new Sequelize(process.env.DATABASE_URL , {
   dialect: 'mysql',
   dialectOptions: {
     ssl: {
-      rejectUnauthorized: true,        
+      require: true,
+      rejectUnauthorized: true // <<<<<<< YOU NEED THIS
     }
   },
   define: {
