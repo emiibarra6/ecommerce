@@ -1,11 +1,12 @@
-import { productosdb } from '../models/productos.models.js'
+import { ventasdb , ventasDetalledb } from '../models/index.model.js'
 import slug from 'slug'
 import { getValue, setValue , client } from '../helpers/redis.js'
+
 
 const traeTodosLasVentas = async (req,res,next) => {
   try { 
     await client.connect()
-    let reply = await getValue('productos') 
+    let reply = await getValue('ventas') 
     //si existe info, terminamos response devolviendo la info
     if(reply !== null) {
       await client.disconnect()
@@ -13,14 +14,13 @@ const traeTodosLasVentas = async (req,res,next) => {
     } 
 
     //si llegamos hasta aca, no esta en redis, hacemos la consulta a la base de datos y registramos en caché.
-    productosdb.findAll({
-      attributes: { exclude: ['id'] }
+    ventasdb.findAll({
+      include: ventasDetalledb
     }).then(async produc => {
       res.status(200).json({cache:false, json: produc})
-      await setValue('productos',JSON.stringify(produc))
+      await setValue('ventas',JSON.stringify(produc))
       await client.disconnect()
     })
-         
   }catch (error) {
     await client.disconnect()
     return next(error)  
@@ -47,7 +47,7 @@ const guardarVenta = async (req,res,next) => {
     const slug_producto = slug(nombre+descripcion)
             
     //Almacenarlo en la bd
-    await productosdb.create({
+    await ventasdb.create({
       nombre,
       descripcion,
       precio,
@@ -69,7 +69,7 @@ const guardarVenta = async (req,res,next) => {
 
 const obtenerVentaPorID = async (req,res,next) => {
   try {
-    productosdb.findByPk(req.params.id)
+    ventasdb.findByPk(req.params.id)
       .then(produc => {
         (produc === null) ? res.status(400).json({msg: `Producto con ID ${req.params.id} no encontrado`})  : res.status(200).json(produc)
       }).catch(err => {
@@ -83,7 +83,7 @@ const obtenerVentaPorID = async (req,res,next) => {
 
 const actualizarVenta = async (req,res,next) => {
   try {
-    await productosdb.update({
+    await ventasdb.update({
       nombre: req.body.nombre,
       descripcion:req.body.descripcion,
       precio:req.body.precio,

@@ -8,11 +8,13 @@ const db = await new Sequelize(process.env.DATABASE_URL , {
   dialectOptions: {
     ssl: {
       require: true,
-      rejectUnauthorized: true // <<<<<<< YOU NEED THIS
+      rejectUnauthorized: true 
     }
   },
   define: {
-    timestamps: false
+    timestamps: false,
+    //agregaba una 's' al final de cada tabla, dolor de cabeza detect.😁
+    freezeTableName:true
   },
   pool: {
     max: 15,

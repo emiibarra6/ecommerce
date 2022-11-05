@@ -2,6 +2,10 @@ import { DataTypes } from 'sequelize'
 import db from '../db.js'
 
 export const ventasdb = db.define('ventas', {
+  id:{
+    type: DataTypes.INTEGER,
+    primaryKey:true,
+  },
   id_usuario: {
     type: DataTypes.INTEGER,
     allowNull: false,

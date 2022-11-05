@@ -1,9 +1,11 @@
 import { DataTypes } from 'sequelize'
 import db from '../db.js'
-import ventas from './ventas.model.js'
-import productos from './productos.models.js'
 
 export const ventasDetalledb = db.define('ventas_detalle', {
+  id:{
+    type: DataTypes.INTEGER,
+    primaryKey:true,
+  },
   id_venta: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -40,10 +42,4 @@ export const ventasDetalledb = db.define('ventas_detalle', {
     },  
   },
   
-}, 
-//relaciones
-ventasDetalledb.belongsTo(ventas, {foreignKey: 'id_venta'}),
-ventas.hasMany(ventasDetalledb, {foreignKey: 'id_venta'}),
-ventasDetalledb.belongsTo(productos, {foreignKey: 'id_producto'})
-
-)
+})
