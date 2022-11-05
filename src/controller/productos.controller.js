@@ -60,7 +60,7 @@ const guardarProducto = async (req,res,next) => {
     }).then(produc => {
       res.status(200).json({msg: 'Producto guardado correctamente ' , produc})
     }).catch(err =>{
-      res.status(400).json({msg: 'Error, chekea los datos: ' , err})
+      res.status(400).json({msg: `Error, chekea los datos:  ${err} `})
     })
   } catch (err) {
     return next(err)
