@@ -76,19 +76,28 @@ const actualizarCategoria = async (req,res,next) => {
     if (error) {
       next(`Error en validacion: ${error.details} `)
     }
-    await categoriadb.update({
-      nombre,
-      descripcion,
-      imagen,
-    }, {
-      where: {
-        id: req.params.id
-      }
-    }).then(result => {
-      res.status(200).json({msg: `Categoria ${result} actualizada`})
-    }).catch(err => {
-      res.status(400).json(err)
-    })   
+    categoriadb.findByPk(req.params.id)
+      .then(async (cat) => {
+        if(!cat) return next('Producto no encontrado')
+        const slug_categoria = slug(nombre+descripcion)
+        await categoriadb.update({
+          nombre,
+          descripcion,
+          imagen,
+          slug_categoria
+        }, {
+          where: {
+            id: req.params.id
+          }
+        }).then(result => {
+          res.status(200).json({msg: `Categoria ${result} actualizada`})
+        }).catch(err => {
+          res.status(400).json(err)
+        })
+      }).catch(err => {
+        next(`Producto no encontrado ${err}`)
+      })
+       
   } catch (err) {
     next(err)
   }
@@ -97,15 +106,20 @@ const actualizarCategoria = async (req,res,next) => {
 
 const borrarCategoria = async (req,res,next) => {
   try {
-    categoriadb.destroy({
-      where: {
-        id: req.params.id
-      }
-    }).then(result => {
-      res.status(200).json({ msg: `categoria con ID: ${result} , borrado exitosamente:`})
-    }).catch(err => {
-      res.status(400).json(err)
-    })   
+    categoriadb.findByPk(req.params.id)
+      .then(cat => {
+        if (!cat) return next('No existe categoria ')
+        categoriadb.destroy({
+          where: {
+            id: req.params.id
+          }
+        }).then(result => {
+          res.status(200).json({ msg: `categoria con ID: ${result} , borrado exitosamente:`})
+        }).catch(err => {
+          res.status(400).json(err)
+        })  
+      })
+     
   } catch (err) {
     next(err)
   }
