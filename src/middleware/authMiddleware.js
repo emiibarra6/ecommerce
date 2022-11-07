@@ -9,8 +9,7 @@ const checkAuth  = async (req,res,next) => {
     req.usuario = await Admin.findById(decoded.id).select('-password')
     return next()
   } catch (error) {
-    const err = new Error('Token no valido o inexistente')
-    return res.status(403).json({msg: err.message + error})
+    throw new Error('No autorizado')
   }
 }
 
