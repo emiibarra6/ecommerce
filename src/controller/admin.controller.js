@@ -3,8 +3,7 @@ import generarJWT from '../helpers/generarJWT.js'
 import { validarAdmin } from '../middleware/validaciones.js'
 
 const crearAdmin =  async (req,res,next) => {
-  const {nombre,email,password,confirmarPassword} = req.body
-  const { error } = validarAdmin(nombre,email,password,confirmarPassword)
+  const { error } = validarAdmin(req.body)
   if (error) {
     next(`Error en validacion: ${error.details} `)
   }
