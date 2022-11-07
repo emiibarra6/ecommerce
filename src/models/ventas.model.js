@@ -5,6 +5,7 @@ export const ventasdb = db.define('ventas', {
   id:{
     type: DataTypes.INTEGER,
     primaryKey:true,
+    autoIncrement: true,
   },
   id_usuario: {
     type: DataTypes.INTEGER,

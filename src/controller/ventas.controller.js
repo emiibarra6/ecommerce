@@ -28,48 +28,49 @@ const traeTodosLasVentas = async (req,res,next) => {
 
 const guardarVenta = async (req,res,next) => {
   //venta es una sola
-  const { id_usuario , total , fecha } = req.body
-  let detalle_venta_req = []
-  
-  //pero los detalles de ventas pueden ser varios, asi que los asignamos a un array!
-  // const { id_venta, id_producto, cantidad, precio, subtotal } = req.body
-  req.body.forEach(function (entry,index)  {
-    detalle_venta_req.push({entry})
-  })
-  const errores = []
-  let transaction
+  const { id_usuario , total , fecha } = req.body.infoVenta
+  const arrayDetalles = req.body.infoDetalle
+  if(arrayDetalles.length === 0){
+    return next(' Campos imcompletos ')
+  }
   try {
-    if(!id_usuario || !total || !fecha || !id_producto || !cantidad || !precio || !subtotal ){
-      errores.push( { mensaje: 'Campos incompletos, por favor verificá' })
+    if(!id_usuario || !total || !fecha  ){
+      return next('Campos incompletos, por favor verificá' )
     }
   } catch(e){
-    return next(errores)
+    return next('Algo mal ocurrio')
   }
   
+  const t = await sequelize.transaction()
   try{
-    transaction = await sequelize.transaction()
-    //Almacenarlo en la bd // ver de hacer rollback si hay un error.! VER!!!!!
     const venta = await ventasdb.create({
       id_usuario,
       total,
       fecha,
-    } , { transaction } )
-
-    const id_venta = venta.id
-
-    const detalle_venta = await ventasDetalledb.create({
-      id_venta,
-      id_producto,
-      cantidad,
-      precio,
-      subtotal
-    }, { transaction } )
-
-    await transaction.commit() 
-    res.status(200).json({msg:'Venta registrada correctamente 😎' , data: ` ${venta} - ${detalle_venta} `})
+    } , { transaction: t  } )
+    const id_venta = venta.dataValues.id
+    console.log(venta)
+    arrayDetalles.forEach(async (element) => {
+      const id_producto = element.id_producto
+      const cantidad = element.cantidad
+      const precio = element.precio
+      const subtotal = element.subtotal
+      await ventasDetalledb.create({
+        id_venta,
+        id_producto,
+        cantidad,
+        precio,
+        subtotal,
+      })
+    }, { transaction: t  } )
+    
+    
+    await t.commit()
+    res.status(200).json({msg:'Venta registrada correctamente 😎' , venta: ` ${venta.dataValues.id} ` , usuario: ` ${venta.dataValues.id_usuario}` })
+  
   } catch (err) {
-    if(transaction) {
-      await transaction.rollback()
+    if(t) {
+      await t.rollback()
     }
     return next(err)
   }
