@@ -9,7 +9,7 @@ const checkAuth  = async (req,res,next) => {
     req.usuario = await Admin.findById(decoded.id).select('-password')
     return next()
   } catch (error) {
-    throw new Error('No autorizado')
+    next(new Error('No autorizado'))
   }
 }
 
