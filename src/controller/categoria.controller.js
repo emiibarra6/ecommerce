@@ -31,7 +31,7 @@ const traeTodasCategorias = async (req,res,next) => {
 
 const guardarCategoria = async (req,res,next) => {
   const { nombre,descripcion,imagen } = req.body
-  const { error } = validarCategorias(nombre,descripcion,imagen)
+  const { error } = validarCategorias(req.body)
   if (error) {
     next(`Error en validacion: ${error.details} `)
   }
@@ -72,7 +72,7 @@ const obtenerCategoriaPorID = async (req,res,next) => {
 const actualizarCategoria = async (req,res,next) => {
   try {
     const { nombre,descripcion,imagen } = req.body
-    const { error } = validarCategorias(nombre,descripcion,imagen)
+    const { error } = validarCategorias(req.body)
     if (error) {
       next(`Error en validacion: ${error.details} `)
     }
