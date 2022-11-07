@@ -20,8 +20,9 @@
     "express-myconnection": "^1.0.4",
     "helmet": "^6.0.0",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.7.0",
+    "mongoose": "^6.7.1",
     "morgan": "^1.10.0",
+    "mysql2": "^3.0.0-rc.1",
     "redis": "^4.3.1",
     "sequelize": "^6.24.0",
     "slug": "^8.2.2"

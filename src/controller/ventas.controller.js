@@ -64,10 +64,8 @@ const guardarVenta = async (req,res,next) => {
       })
     }, { transaction: t  } )
     
-    
     await t.commit()
     res.status(200).json({msg:'Venta registrada correctamente 😎' , venta: ` ${venta.dataValues.id} ` , usuario: ` ${venta.dataValues.id_usuario}` })
-  
   } catch (err) {
     if(t) {
       await t.rollback()
