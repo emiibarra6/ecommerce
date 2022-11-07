@@ -10,7 +10,7 @@ function routerApi(app){
     
   router.use('/productos' , routerProductos)
   router.use('/admin' , routerAdmin)
-  router.use('/cateogiras' , routerCategorias)
+  router.use('/categorias' , routerCategorias)
   router.use('/ventas' , routerVentas)
 }
 
