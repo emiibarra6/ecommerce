@@ -1,16 +1,12 @@
 import Admin from '../models/admin.model.js'
 import generarJWT from '../helpers/generarJWT.js'
+import { validarAdmin } from '../middleware/validaciones.js'
 
 const crearAdmin =  async (req,res,next) => {
-  const {nombre,email,password} = req.body
-    
-  try {
-    //Validaciones
-    if(!nombre || !email || !password){
-      return res.status(400).send('error en validacion de datos')
-    }          
-  } catch (error) {
-    return next(error)
+  const {nombre,email,password,confirmarPassword} = req.body
+  const { error } = validarAdmin(nombre,email,password,confirmarPassword)
+  if (error) {
+    next(`Error en validacion: ${error.details} `)
   }
     
   //guardar en bd
@@ -21,7 +17,7 @@ const crearAdmin =  async (req,res,next) => {
     //rta
     res.status(200).json(adminSave)
   } catch (error) {
-    return next(error)
+    next(error)
   }
 
 }
@@ -32,12 +28,16 @@ const obtenerTodosLosAdmin = async (req,res,next) => {
     const todosAdmin = await Admin.find()
     res.status(200).json(todosAdmin)   
   } catch (error) {
-    return next(error)
+    next(error)
   }
 }
 
 const autenticarAdmin = async (req,res,next) => {
-  const { email , password } = req.body
+  const {nombre,email,password} = req.body
+  const { error } = validarAdmin(nombre,email,password)
+  if (error) {
+    next(`Error en validacion: ${error.details} `)
+  }
 
   try {
     //verificamos que exista email en bd
@@ -53,7 +53,7 @@ const autenticarAdmin = async (req,res,next) => {
       return res.status(400).json({msg: 'contrasenia incorrecta'})
     }
   } catch (error) {
-    return next(error)
+    next(error)
   }
 }
 

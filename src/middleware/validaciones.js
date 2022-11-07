@@ -20,5 +20,14 @@ const categoriasSchema = Joi.object({
   imagen:Joi.string().required(),
 })
 
+const adminSchema = Joi.object({
+  nombre: Joi.string().min(3).max(100).required(),
+  email: Joi.string().email().required(),
+  password:Joi.string().min(3).max(50).required(),
+  confirmarPassword: Joi.ref('password'),
+})
+  
+
 export const validarProductos = validator(productoSchema)
 export const validarCategorias = validator(categoriasSchema)
+export const validarAdmin = validator(adminSchema)
