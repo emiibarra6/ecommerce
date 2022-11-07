@@ -1,6 +1,7 @@
 import { productosdb } from '../models/productos.models.js'
 import slug from 'slug'
 import { getValue, setValue , client } from '../helpers/redis.js'
+const { validarProductos } = require('../middleware/validaciones.js')
 
 const traeTodosLosProductos = async (req,res,next) => {
   try { 
@@ -28,20 +29,13 @@ const traeTodosLosProductos = async (req,res,next) => {
 }
 
 const guardarProducto = async (req,res,next) => {
-  //Validar
   const { nombre , descripcion , precio, imagen , inventario, id_categoria, talle , color} = req.body
-  const errores = []
+  const { error } = validarProductos(nombre,descripcion,precio,imagen,inventario,id_categoria,talle,color)
 
-  try {
-    if(nombre.trim() === '' ){
-      errores.push( { mensaje: 'El nombre esta vacio' })
-    }
-    if(descripcion.trim() === '' ){
-      errores.push( { mensaje:  'La descripción esta vacia' })
-    }
-  } catch(err){
-    return next(errores)
+  if (error) {
+    return next(`Error en validacion: ${error.details} `)
   }
+
   try{
     //generar slug
     const slug_producto = slug(nombre+descripcion)
