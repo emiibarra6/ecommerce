@@ -14,4 +14,11 @@ const productoSchema = Joi.object({
   color: Joi.string().min(3).max(100).required()
 })
 
+const categoriasSchema = Joi.object({
+  nombre: Joi.string().min(3).max(100).required(),
+  descripcion: Joi.string().max(100).required(),
+  imagen:Joi.string().required(),
+})
+
 export const validarProductos = validator(productoSchema)
+export const validarCategorias = validator(categoriasSchema)

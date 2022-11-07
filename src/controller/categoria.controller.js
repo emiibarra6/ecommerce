@@ -1,6 +1,7 @@
 import { categoriadb } from '../models/categoria.models.js'
 import slug from 'slug'
 import { getValue, setValue , client } from '../helpers/redis.js'
+import { validarCategorias } from '../middleware/validaciones.js'
 
 const traeTodasCategorias = async (req,res,next) => {
   try { 
@@ -24,24 +25,15 @@ const traeTodasCategorias = async (req,res,next) => {
          
   }catch (error) {
     await client.disconnect()
-    return next(error)  
+    next(error)  
   }
 }
 
 const guardarCategoria = async (req,res,next) => {
-  //Validar
-  const { nombre , descripcion , imagen } = req.body
-  const errores = []
-
-  try {
-    if(nombre.trim() === '' ){
-      errores.push( { mensaje: 'El nombre esta vacio' })
-    }
-    if(descripcion.trim() === '' ){
-      errores.push( { mensaje:  'La descripción esta vacia' })
-    }
-  } catch(err){
-    return next(errores)
+  const { nombre,descripcion,imagen } = req.body
+  const { error } = validarCategorias(nombre,descripcion,imagen)
+  if (error) {
+    next(`Error en validacion: ${error.details} `)
   }
   try{
     //generar slug
@@ -59,7 +51,7 @@ const guardarCategoria = async (req,res,next) => {
       res.status(400).json({msg: 'Error, chekea los datos: ' , err})
     })
   } catch (err) {
-    return next(err)
+    next(err)
   }
 }
 
@@ -79,10 +71,15 @@ const obtenerCategoriaPorID = async (req,res,next) => {
 
 const actualizarCategoria = async (req,res,next) => {
   try {
+    const { nombre,descripcion,imagen } = req.body
+    const { error } = validarCategorias(nombre,descripcion,imagen)
+    if (error) {
+      next(`Error en validacion: ${error.details} `)
+    }
     await categoriadb.update({
-      nombre: req.body.nombre,
-      descripcion:req.body.descripcion,
-      imagen:req.body.imagen,
+      nombre,
+      descripcion,
+      imagen,
     }, {
       where: {
         id: req.params.id
@@ -93,7 +90,7 @@ const actualizarCategoria = async (req,res,next) => {
       res.status(400).json(err)
     })   
   } catch (err) {
-    return next(err)
+    next(err)
   }
 }
 
@@ -110,7 +107,7 @@ const borrarCategoria = async (req,res,next) => {
       res.status(400).json(err)
     })   
   } catch (err) {
-    return next(err)
+    next(err)
   }
 }
 
