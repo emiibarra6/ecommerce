@@ -33,10 +33,10 @@ const obtenerTodosLosAdmin = async (req,res,next) => {
 }
 
 const autenticarAdmin = async (req,res,next) => {
-  const {nombre,email,password} = req.body
-  const { error } = validarAdmin(nombre,email,password)
+  const {email,password} = req.body
+  const { error } = validarAdmin(req.body)
   if (error) {
-    next(`Error en validacion: ${error.details} `)
+    next(`Error en validacion: ${error} `)
   }
 
   try {
