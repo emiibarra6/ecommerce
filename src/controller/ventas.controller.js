@@ -1,5 +1,4 @@
 import { ventasdb , ventasDetalledb } from '../models/index.model.js'
-import slug from 'slug'
 import { getValue, setValue , client } from '../helpers/redis.js'
 
 
@@ -28,37 +27,25 @@ const traeTodosLasVentas = async (req,res,next) => {
 }
 
 const guardarVenta = async (req,res,next) => {
-  //Validar
-  const { nombre , descripcion , precio, imagen , inventario, id_categoria, talle , color} = req.body
+  //venta
+  const { id_usuario , total , fecha } = req.body
+  const { id_venta, id_producto, cantidad, precio, subtotal } = req.body
   const errores = []
-
   try {
-    if(nombre.trim() === '' ){
-      errores.push( { mensaje: 'El nombre esta vacio' })
-    }
-    if(descripcion.trim() === '' ){
-      errores.push( { mensaje:  'La descripción esta vacia' })
+    if(!id_usuario || !total || !fecha || !id_venta || !id_producto || !cantidad || !precio || !subtotal ){
+      errores.push( { mensaje: 'Campos incompletos, por favor verificá' })
     }
   } catch(err){
     return next(errores)
   }
   try{
-    //generar slug
-    const slug_producto = slug(nombre+descripcion)
-            
-    //Almacenarlo en la bd
+    //Almacenarlo en la bd // ver de hacer rollback si hay un error.! VER!!!!!
     await ventasdb.create({
-      nombre,
-      descripcion,
-      precio,
-      imagen,
-      inventario,
-      id_categoria,
-      talle,
-      color,
-      slug_producto
+      id_usuario,
+      total,
+      fecha,
     }).then(produc => {
-      res.status(200).json({msg: 'Producto guardado correctamente ' , produc})
+      res.status(200).json({msg: 'Venta guardada correctamente ' , produc})
     }).catch(err =>{
       res.status(400).json({msg: `Error, chekea los datos:  ${err} `})
     })
@@ -69,12 +56,7 @@ const guardarVenta = async (req,res,next) => {
 
 const obtenerVentaPorID = async (req,res,next) => {
   try {
-    ventasdb.findByPk(req.params.id)
-      .then(produc => {
-        (produc === null) ? res.status(400).json({msg: `Producto con ID ${req.params.id} no encontrado`})  : res.status(200).json(produc)
-      }).catch(err => {
-        res.status(400).json({msg: `Error: ${err} `})
-      })  
+    
   } catch (err) {
     return next(err)
   }
@@ -83,24 +65,7 @@ const obtenerVentaPorID = async (req,res,next) => {
 
 const actualizarVenta = async (req,res,next) => {
   try {
-    await ventasdb.update({
-      nombre: req.body.nombre,
-      descripcion:req.body.descripcion,
-      precio:req.body.precio,
-      imagen:req.body.imagen,
-      inventario:req.body.inventario,
-      id_categoria:req.body.id_categoria,
-      talle:req.body.talle,
-      color:req.body.color,
-    }, {
-      where: {
-        id: req.params.id
-      }
-    }).then(result => {
-      res.status(200).json({msg: `Producto ${result} actualizado`})
-    }).catch(err => {
-      res.status(400).json(err)
-    })   
+   
   } catch (err) {
     return next(err)
   }
