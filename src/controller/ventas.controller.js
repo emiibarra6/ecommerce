@@ -42,7 +42,7 @@ const guardarVenta = async (req,res,next) => {
     if(!id_usuario || !total || !fecha || !id_producto || !cantidad || !precio || !subtotal ){
       errores.push( { mensaje: 'Campos incompletos, por favor verificá' })
     }
-  } catch(err){
+  } catch(e){
     return next(errores)
   }
   
@@ -54,6 +54,8 @@ const guardarVenta = async (req,res,next) => {
       total,
       fecha,
     } , { transaction } )
+
+    const id_venta = venta.id
 
     const detalle_venta = await ventasDetalledb.create({
       id_venta,
