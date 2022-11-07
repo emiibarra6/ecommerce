@@ -1,6 +1,6 @@
 import { ventasdb , ventasDetalledb } from '../models/index.model.js'
 import { getValue, setValue , client } from '../helpers/redis.js'
-
+import sequelize from '../db.js'
 
 const traeTodosLasVentas = async (req,res,next) => {
   try { 
@@ -27,29 +27,48 @@ const traeTodosLasVentas = async (req,res,next) => {
 }
 
 const guardarVenta = async (req,res,next) => {
-  //venta
+  //venta es una sola
   const { id_usuario , total , fecha } = req.body
-  const { id_venta, id_producto, cantidad, precio, subtotal } = req.body
+  let detalle_venta_req = []
+  
+  //pero los detalles de ventas pueden ser varios, asi que los asignamos a un array!
+  // const { id_venta, id_producto, cantidad, precio, subtotal } = req.body
+  req.body.forEach(function (entry,index)  {
+    detalle_venta_req.push({entry})
+  })
   const errores = []
+  let transaction
   try {
-    if(!id_usuario || !total || !fecha || !id_venta || !id_producto || !cantidad || !precio || !subtotal ){
+    if(!id_usuario || !total || !fecha || !id_producto || !cantidad || !precio || !subtotal ){
       errores.push( { mensaje: 'Campos incompletos, por favor verificá' })
     }
   } catch(err){
     return next(errores)
   }
+  
   try{
+    transaction = await sequelize.transaction()
     //Almacenarlo en la bd // ver de hacer rollback si hay un error.! VER!!!!!
-    await ventasdb.create({
+    const venta = await ventasdb.create({
       id_usuario,
       total,
       fecha,
-    }).then(produc => {
-      res.status(200).json({msg: 'Venta guardada correctamente ' , produc})
-    }).catch(err =>{
-      res.status(400).json({msg: `Error, chekea los datos:  ${err} `})
-    })
+    } , { transaction } )
+
+    const detalle_venta = await ventasDetalledb.create({
+      id_venta,
+      id_producto,
+      cantidad,
+      precio,
+      subtotal
+    }, { transaction } )
+
+    await transaction.commit() 
+    res.status(200).json({msg:'Venta registrada correctamente 😎' , data: ` ${venta} - ${detalle_venta} `})
   } catch (err) {
+    if(transaction) {
+      await transaction.rollback()
+    }
     return next(err)
   }
 }
