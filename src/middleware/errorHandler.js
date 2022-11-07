@@ -1,4 +1,5 @@
 export const errorHandler = (err,req,res) => {
+  console.log(process.env.NODE_ENV)
   const codigoEstado = res.statusCode !== 200 ? res.statusCode : 500 
   res.status(codigoEstado)
   res.json({

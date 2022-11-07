@@ -1,7 +1,7 @@
 import { productosdb } from '../models/productos.models.js'
 import slug from 'slug'
 import { getValue, setValue , client } from '../helpers/redis.js'
-const { validarProductos } = require('../middleware/validaciones.js')
+import { validarProductos } from '../middleware/validaciones.js'
 
 const traeTodosLosProductos = async (req,res,next) => {
   try { 
@@ -24,7 +24,7 @@ const traeTodosLosProductos = async (req,res,next) => {
          
   }catch (error) {
     await client.disconnect()
-    return next(error)  
+    next(error)  
   }
 }
 
@@ -33,7 +33,7 @@ const guardarProducto = async (req,res,next) => {
   const { error } = validarProductos(nombre,descripcion,precio,imagen,inventario,id_categoria,talle,color)
 
   if (error) {
-    return next(`Error en validacion: ${error.details} `)
+    next(`Error en validacion: ${error.details} `)
   }
 
   try{
@@ -57,7 +57,7 @@ const guardarProducto = async (req,res,next) => {
       res.status(400).json({msg: `Error, chekea los datos:  ${err} `})
     })
   } catch (err) {
-    return next(err)
+    next(err)
   }
 }
 
@@ -70,22 +70,28 @@ const obtenerProductoPorID = async (req,res,next) => {
         res.status(400).json({msg: `Error: ${err} `})
       })  
   } catch (err) {
-    return next(err)
+    next(err)
   }
     
 }
 
 const actualizarProducto = async (req,res,next) => {
   try {
+    const { nombre , descripcion , precio, imagen , inventario, id_categoria, talle , color} = req.body
+    const { error } = validarProductos(nombre,descripcion,precio,imagen,inventario,id_categoria,talle,color)
+
+    if (error) {
+      next(`Error en validacion: ${error.details} `)
+    }
     await productosdb.update({
-      nombre: req.body.nombre,
-      descripcion:req.body.descripcion,
-      precio:req.body.precio,
-      imagen:req.body.imagen,
-      inventario:req.body.inventario,
-      id_categoria:req.body.id_categoria,
-      talle:req.body.talle,
-      color:req.body.color,
+      nombre,
+      descripcion,
+      precio,
+      imagen,
+      inventario,
+      id_categoria,
+      talle,
+      color,
     }, {
       where: {
         id: req.params.id
@@ -96,7 +102,7 @@ const actualizarProducto = async (req,res,next) => {
       res.status(400).json(err)
     })   
   } catch (err) {
-    return next(err)
+    next(err)
   }
 }
 
@@ -113,7 +119,7 @@ const borrarProducto = async (req,res,next) => {
       res.status(400).json(err)
     })   
   } catch (err) {
-    return next(err)
+    next(err)
   }
 }
 
