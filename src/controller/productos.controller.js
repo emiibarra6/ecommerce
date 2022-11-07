@@ -30,7 +30,7 @@ const traeTodosLosProductos = async (req,res,next) => {
 
 const guardarProducto = async (req,res,next) => {
   const { nombre , descripcion , precio, imagen , inventario, id_categoria, talle , color} = req.body
-  const { error } = validarProductos(nombre,descripcion,precio,imagen,inventario,id_categoria,talle,color)
+  const { error } = validarProductos(req.body)
 
   if (error) {
     next(`Error en validacion: ${error.details} `)
@@ -78,7 +78,7 @@ const obtenerProductoPorID = async (req,res,next) => {
 const actualizarProducto = async (req,res,next) => {
   try {
     const { nombre , descripcion , precio, imagen , inventario, id_categoria, talle , color} = req.body
-    const { error } = validarProductos(nombre,descripcion,precio,imagen,inventario,id_categoria,talle,color)
+    const { error } = validarProductos(req.body)
 
     if (error) {
       next(`Error en validacion: ${error.details} `)
